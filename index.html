@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizarraOnline</title>
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: center;
+            padding: 20px;
+        }
+        #canvas {
+            width: 110%;
+            height: 70vh;
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+        .draggable {
+            position: absolute;
+            cursor: move;
+        }
+        .resizeable {
+            resize: both;
+            overflow: hidden;
+        }
+        .connection-point {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: black;
+            position: absolute;
+            cursor: pointer;
+        }
+        .connection-point.top {
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .connection-point.bottom {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        footer {
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-decoration: underline;">PizarraOnline</h1>
+        <div id="controls" class="row mt-4">
+            <button class="button primary" onclick="addPanel(100, 100)">Agregar Panel</button>
+            <button class="button success" onclick="addText(200, 200, 'Texto Editable')"><i class="fas fa-text-height"></i></button>
+            <button class="button warning" onclick="addImage(300, 300)"><i class="fas fa-images"></i></button>
+            <button class="button alert" onclick="clearCanvas()"><i class="fas fa-trash-can"></i></button>
+            <button class="button info" onclick="exportCanvas()"><i class="fas fa-download"></i></button>
+        </div>
+        <div id="canvas"></div>
+    </div>
+    <footer>
+        <p>- &copy; 2024 <a href="https://github.com/LuigiValentino">Luigi Adducci</a> -</p>
+    </footer>
+    <div id="editModalPanel" class="dialog" data-role="dialog">
+        <div class="dialog-title">Editar Panel</div>
+        <div class="dialog-content">
+            <label>Título:</label>
+            <input type="text" id="editTitleInput" class="input full-size">
+            <label>Subtítulo:</label>
+            <input type="text" id="editSubtitleInput" class="input full-size">
+            <label>Color:</label>
+            <select id="editColorInput" class="input full-size">
+                <option value="bg-cyan">Cian</option>
+                <option value="bg-red">Rojo</option>
+                <option value="bg-green">Verde</option>
+                <option value="bg-yellow">Amarillo</option>
+            </select>
+        </div>
+        <div class="dialog-actions">
+            <button class="button primary" onclick="saveChangesPanel()">Guardar</button>
+            <button class="button secondary" onclick="Metro.dialog.close('#editModalPanel')">Cerrar</button>
+        </div>
+    </div>
+    <div id="editModalText" class="dialog" data-role="dialog">
+        <div class="dialog-title">Editar Texto</div>
+        <div class="dialog-content">
+            <label>Texto:</label>
+            <input type="text" id="editTextInput" class="input full-size">
+        </div>
+        <div class="dialog-actions">
+            <button class="button primary" onclick="saveChangesText()">Guardar</button>
+            <button class="button secondary" onclick="Metro.dialog.close('#editModalText')">Cerrar</button>
+        </div>
+    </div>
+    <div id="editModalImage" class="dialog" data-role="dialog">
+        <div class="dialog-title">Editar Imagen</div>
+        <div class="dialog-content">
+            <label>URL de la Imagen:</label>
+            <input type="text" id="editImageUrlInput" class="input full-size">
+        </div>
+        <div class="dialog-actions">
+            <button class="button primary" onclick="saveChangesImage()">Guardar</button>
+            <button class="button secondary" onclick="Metro.dialog.close('#editModalImage')">Cerrar</button>
+        </div>
+    </div>
+    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.6/js/jsplumb.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
